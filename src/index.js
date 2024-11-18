@@ -7,8 +7,8 @@ app.use(express.json());
 const PORT = 3000;
 
 // Telegram Bot Token và Chat ID
-const TELEGRAM_BOT_TOKEN = '7866940602:AAHDbByjkFtoX6lVo7SSlWfcFxfOfqaIvnw'; // Thay bằng token bot của bạn
-const TELEGRAM_CHAT_ID = '7866940602'; // Thay bằng chat ID người dùng
+const TELEGRAM_BOT_TOKEN = ''; // Thay bằng token bot của bạn
+const TELEGRAM_CHAT_ID = ''; // Thay bằng chat ID người dùng
 
 // Endpoint POST để nhận thông tin từ FE
 app.post('/api/user-info', async (req, res) => {
