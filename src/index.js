@@ -10,7 +10,9 @@ const PORT = 3000;
 require('dotenv').config();
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;// Thay bằng chat ID người dùng
+const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;//
+console.log('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN);
+console.log('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID);// Thay bằng chat ID người dùng
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     console.error('Error: Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID');
     process.exit(1);
