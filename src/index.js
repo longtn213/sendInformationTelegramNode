@@ -11,8 +11,7 @@ require('dotenv').config();
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.TELEGRAM_CHAT_ID;//
-console.log('TELEGRAM_BOT_TOKEN:', TELEGRAM_BOT_TOKEN);
-console.log('TELEGRAM_CHAT_ID:', TELEGRAM_CHAT_ID);// Thay bằng chat ID người dùng
+
 if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
     console.error('Error: Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID');
     process.exit(1);
@@ -23,6 +22,7 @@ app.post('/api/user-info', async (req, res) => {
 
     // Lấy IP từ body hoặc từ request headers/sockets nếu không có trong body
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+
 
     // Format thông tin thành chuỗi để gửi
     const message = `
@@ -46,8 +46,6 @@ app.post('/api/user-info', async (req, res) => {
             text: message,
             parse_mode: 'Markdown', // Định dạng tin nhắn
         });
-
-        console.log('Message sent to Telegram:', response.data);
 
         res.json({
             message: 'User info received and sent to Telegram successfully',
