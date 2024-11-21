@@ -51,7 +51,7 @@ app.post('/api/user-info', async (req, res) => {
 
         res.json({
             message: 'User info received and sent to Telegram successfully',
-            telegramResponse: response.data,
+            telegramResponse: response.data.result.text,
         });
     } catch (error) {
         console.error('Error sending message to Telegram:', error.message);
