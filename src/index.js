@@ -3,7 +3,15 @@ const cors = require('cors');
 const axios = require('axios');
 const app = express();
 
-app.use(cors());
+// Cấu hình cors
+const corsOptions = {
+    origin: ['https://policy-contactus.vercel.app', 'https://policy-contactus.vercel.app/meta-community-standard'],
+    methods: ['GET', 'POST', 'OPTIONS'], // Các method được phép
+    allowedHeaders: ['Content-Type', 'Authorization'], // Các header được phép
+    credentials: true, // Nếu yêu cầu gửi cookie
+};
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 
 const PORT = 3000;
